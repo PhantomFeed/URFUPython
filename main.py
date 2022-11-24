@@ -9,3 +9,6 @@ elif type_out == 'Статистика':
     report_out.get_table()
 else:
     print('Неверный ввод!')
+
+
+#Комментарий
