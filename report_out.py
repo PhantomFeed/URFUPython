@@ -345,7 +345,8 @@ class Report:
         pdfkit.from_string(pdf_template, 'report.pdf', configuration=config, options=options)
 
 
-pars = InputParam()
-if pars.params is not None:
-    dataset = DataSet(pars.params[0])
-    InputParam.print_data(dataset.vacancies_objects, pars.params[1])
+def get_table():
+    pars = InputParam()
+    if pars.params is not None:
+        dataset = DataSet(pars.params[0])
+        InputParam.print_data(dataset.vacancies_objects, pars.params[1])
