@@ -1,0 +1,65 @@
+<!DOCTIPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="wigth-device-wigth, initial-scale-1">
+    <title>Report</title>
+</head>
+<body>
+<font face="Verdana">
+<h1 align="center">Аналитика по зарплатам и городам по профессии {{ vacancy }}</h1>
+<center><img src="file:///C:/Users/danil/PycharmProjects/pythonProject3/Tasks 2/{{ image_file }}" align="middle"></center>
+    <h2 align="center">Статистика по годам</h2>
+    <table border="1" align="center" CELLPADDING="5px" CELLSPACING="2"
+    style="border-collapse: collapse; border: 1px solid black">
+        <tr>
+            <th align="center">{{heads1[0]}}</th>
+            <th align="center">{{heads1[1]}}</th>
+            <th align="center">{{heads1[2]}}</th>
+            <th align="center">{{heads1[3]}}</th>
+            <th align="center">{{heads1[4]}}</th>
+        </tr>
+        {% for key, value in salary_filter.items() %}
+        <tr>
+            <td align="center">{{key}}</td>
+            <td align="center">{{value}}</td>
+            <td align="center">{{vac_sal_filter[key]}}</td>
+            <td align="center">{{vac_filter[key]}}</td>
+            <td align="center">{{vac_count_filter[key]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+<h2 align="center">Статистика по городам</h2>
+<div style="vertical-align:top;">
+    <table border="1" CELLPADDING="5px" CELLSPACING="2"
+    style="border-collapse: collapse; border: 1px solid black; float:left; width:45%; margin-right:20px;" rules="all">
+        <tr>
+            <th align="center">{{heads2[0]}}</th>
+            <th align="center">{{heads2[1]}}</th>
+        </tr>
+        {% for key, value in salary_cities_filter.items() %}
+        <tr>
+            <td align="center">{{key}}</td>
+            <td align="center">{{value}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <table border="1" CELLPADDING="5px" CELLSPACING="2"
+    style="border-collapse: collapse; border: 1px solid black; float:left; width:45%; margin-right:20px;" rules="all">
+        <tr>
+            <th align="center">{{heads2[3]}}</th>
+            <th align="center">{{heads2[4]}}</th>
+        </tr>
+        {% for key, value in vacs_cities.items() %}
+        <tr>
+            <td align="center">{{key}}</td>
+            <td align="center">{{value}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</font>
+</body>
+</html>
