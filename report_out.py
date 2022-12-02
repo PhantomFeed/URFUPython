@@ -12,6 +12,9 @@ import pandas as pd
 
 
 class Tools:
+    """Класс хранит в себе необходимые 'инструменты' для использования на протяжении всей программы,
+    такие как: словарь и программа очистки текста.
+    """
     rus_names = {'Название': 'name',
                  'Описание': 'description',
                  'Навыки': 'key_skills',
@@ -27,6 +30,14 @@ class Tools:
 
     @staticmethod
     def prepare(text):
+        """Очищает входную строку и возвращает очищенную для дальнейшего использования
+
+            Args:
+                text (str): Строка, которую нужно очистить
+
+            Returns:
+                str: Очищенная строка
+        """
         text = re.sub(r"<[^>]+>", '', text)
         text = "; ".join(text.split('\n'))
         text = ' '.join(text.split())
@@ -34,7 +45,23 @@ class Tools:
 
 
 class Vacancy:
+    """Класс устанавливает все основные поля вакансии
+
+        Attributes:
+            name (str): Название вакансии
+            salary (Salary): Комбинированная информация о зарплате
+            area_name (str): Название региона
+            published_at (str): Дата публикации вакансии
+    """
     def __init__(self, name, salary, area_name, published_at):
+        """Инициализирует объект Vacancy
+
+            Args:
+            name (str): Название вакансии
+            salary (Salary): Комбинированная информация о зарплате
+            area_name (str): Название региона
+            published_at (str): Дата публикации вакансии
+        """
         self.name = name
         self.salary = salary
         self.area_name = area_name
@@ -42,6 +69,14 @@ class Vacancy:
 
 
 class Salary:
+    """Класс для представления зарплаты, также здесь находится словарь для перевода курсов - currency
+
+        Attributes:
+            salary_from (str): Нижняя граница вилки оклада
+            salary_to (str): Верхняя граница вилки оклада
+            salary_currency (str): Валюта оклада
+            salary_to_rub (int): Средняя зарплата в рублях
+    """
     currency = {"AZN": 35.68,
                 "BYR": 23.91,
                 "EUR": 59.90,
@@ -54,6 +89,14 @@ class Salary:
                 "UZS": 0.0055}
 
     def __init__(self, salary_from, salary_to, salary_currency):
+        """Инициализирует объект Salary
+
+            Args:
+                salary_from (str or int or float): Нижняя граница вилки оклада
+                salary_to (str or int or float): Верхняя граница вилки оклада
+                salary_currency (str): Валюта оклада
+                salary_to_rub (int): Средняя зарплата в рублях
+        """
         self.salary_from = salary_from
         self.salary_to = salary_to
         self.salary_currency = salary_currency
@@ -61,11 +104,32 @@ class Salary:
 
     @staticmethod
     def currency_to_rub(salary_from, salary_to, salary_currency):
+        """Вычисляет среднюю зарплату из вилки и переводит в рубли, при помощи словаря - currency
+
+            Args:
+                salary_from (str): Нижняя вилка оклада
+                salary_to (str): Верхняя вилка оклада
+                salary_currency (str): Валюта оклада
+
+            Returns:
+                float: Средняя зарплата в рублях
+        """
         return (float(salary_from) + float(salary_to)) / 2 * Salary.currency[salary_currency]
 
 
 class DataSet:
+    """Класс отвечает за чтение и подготовку данных из CSV-файла
+
+        Attributes:
+            file_name (str): Название файла
+            vacancies_objects (list): Список вакансий
+    """
     def __init__(self, file_name):
+        """Инициализирует объект DataSet.
+            Args:
+                file_name (str): Название файла
+                vacancies_objects (list): Список вакансий
+        """
         self.file_name = file_name
         self.vacancies_objects = DataSet.prepare_data(file_name)
 
@@ -75,6 +139,14 @@ class DataSet:
 
     @staticmethod
     def reader_csv(file_name):
+        """Считывает csv файл.
+
+            Args:
+                file_name (str): Название файла
+
+            Returns:
+                tuple: Кортеж, состоящий из названий колонок и всех вакансий
+        """
         file_csv = open(file_name, encoding="utf-8-sig")
         reader = csv.reader(file_csv)
         list_data = [x for x in reader]
@@ -87,6 +159,14 @@ class DataSet:
 
     @staticmethod
     def prepare_data(file_name):
+        """Отбирает вакансии без пустых ячеек и составляет лист вакансий
+
+            Args:
+                file_name (str): Название файла
+
+            Returns:
+                list: Лист, состоящий из вакансий
+        """
         heads, data = DataSet.reader_csv(file_name)
         processed = [x for x in data if len(x) == len(heads) and "" not in x]
         vacancy_data = []
@@ -108,17 +188,43 @@ class DataSet:
 
 
 class InputParam:
+    """Класс отвечает за обработку параметров вводимых пользователем, а также за печать статистики
+
+        Attributes:
+            file_name (str): Название файла
+            filter_param (str): Название профессии
+    """
     def __init__(self):
+        """Инициализирует объект InputConect
+
+            Args:
+                param (str): Параметры, введенные пользователем
+        """
         self.params = InputParam.get_params()
 
     @staticmethod
     def get_params():
+        """Возвращает заданные параметры, введенные пользователем
+
+            Args:
+                file_name (str): Название файла
+                filter_param (str): Название профессии
+
+            Returns:
+                Tuple (str, str): Название файла и Название профессии
+        """
         file_name = input("Введите название файла: ")
         vacancy = input("Введите название профессии: ")
         return file_name, vacancy
 
     @staticmethod
     def print_data(dictionary, key):
+        """Печатает статистику и вызывает методы для формирования графиков и отчетов
+
+            Args:
+                dictionary (list): Список вакансий
+                key (str): Название профессии
+        """
         years = []
         for vacancy in dictionary:
             years.append(int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')))
@@ -184,9 +290,32 @@ class InputParam:
 
 
 class Report:
+    """Класс отвечает за формирование графиков и отчетов
+
+        Attributes:
+            salary_filter (dict): Динамика уровня зарплат по годам
+            vac_filter (dict): Динамика количества вакансий по годам
+            vac_sal_filter (dict): Динамика уровня зарплат по годам для выбранной профессии
+            vac_count_filter (dict): Динамика количества вакансий по годам для выбранной профессии
+            salary_cities_filter (dict): Уровень зарплат по городам (в порядке убывания)
+            vacs_cities (dict): Доля вакансий по городам (в порядке убывания)
+            others (float): Доля вакансий по городам не входящих в Топ-10
+            vacancy (str): Название профессии
+    """
     def __init__(self, salary_filter, vac_filter, vac_sal_filter, vac_count_filter, salary_cities_filter, vacs_cities,
-                 others,
-                 vacancy):
+                 others, vacancy):
+        """Инициализирует объект Report.
+
+            Args:
+                salary_filter (dict): Динамика уровня зарплат по годам
+                vac_filter (dict): Динамика количества вакансий по годам
+                vac_sal_filter (dict): Динамика уровня зарплат по годам для выбранной профессии
+                vac_count_filter (dict): Динамика количества вакансий по годам для выбранной профессии
+                salary_cities_filter (dict): Уровень зарплат по городам (в порядке убывания)
+                vacs_cities (dict): Доля вакансий по городам (в порядке убывания)
+                others (float): Доля вакансий по городам не входящих в Топ-10
+                vacancy (str): Название профессии
+        """
         self.salary_filter = salary_filter
         self.vac_filter = vac_filter
         self.vac_sal_filter = vac_sal_filter
@@ -198,12 +327,25 @@ class Report:
 
     @staticmethod
     def as_text(value):
+        """Парсит value в строку.
+
+            Args:
+                value (any): Входное значение, которое нужно конвертировать
+
+            Returns:
+                str: value конвертированное в строку.
+        """
         if value is None:
             return ''
         return str(value)
 
     @staticmethod
     def generate_excel(report):
+        """Генерирует excel файл с вакансиями
+
+            Args:
+                report (Report): Объект класса Report
+        """
         wb = Workbook()
         sheet1 = wb.active
         sheet1.title = 'Статистика по годам'
@@ -268,6 +410,11 @@ class Report:
 
     @staticmethod
     def generate_graph(report):
+        """Генерирует png файл со статистикой вакансий на графиках
+
+            Args:
+                report (Report): Объект класса Report
+        """
         width = 0.4
         x_nums = np.arange(len(report.salary_filter.keys()))
         x_list1 = x_nums - width / 2
@@ -317,6 +464,11 @@ class Report:
 
     @staticmethod
     def generate_pdf(report):
+        """Генерирует pdf файл из png и excel файлов
+
+            Args:
+                report (Report): Объект класса Report
+        """
         vacancy = report.vacancy
         image_file = 'graph.png'
 
@@ -346,6 +498,8 @@ class Report:
 
 
 def get_table():
+    """Используется в main.py. Формирует pdf файл.
+    """
     pars = InputParam()
     if pars.params is not None:
         dataset = DataSet(pars.params[0])
