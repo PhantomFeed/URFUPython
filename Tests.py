@@ -13,7 +13,7 @@ class PrepareTests_for_report_Out(TestCase):
     def test_Spaces(self):
         self.assertEqual(report_out.Tools.prepare('AA          AAA'), 'AA AAA')
 
-    def test_StrWithN(self):
+    def test_N(self):
         self.assertEqual(report_out.Tools.prepare('you\\nme'), 'you; me')
 
     def test_Empty(self):
@@ -21,16 +21,16 @@ class PrepareTests_for_report_Out(TestCase):
 
 
 class SalaryTests_for_report_out(TestCase):
-    def test_salary_from(self):
+    def test_salary_type(self):
         self.assertEqual(type(report_out.Salary(10.0, 20.4, 'RUR')).__name__, 'Salary')
 
-    def test_salary_to(self):
+    def test_salary_from(self):
         self.assertEqual(report_out.Salary(10.0, 20.4, 'RUR').salary_from, 10)
 
-    def test_salary_currency(self):
+    def test_salary_to(self):
         self.assertEqual(report_out.Salary(10.0, 20.4, 'RUR').salary_to, 20)
 
-    def test_salary_to_rub(self):
+    def test_salary_currency(self):
         self.assertEqual(report_out.Salary('10.0', 20.4, 'RUR').salary_currency, 'RUR')
 
 
@@ -48,7 +48,7 @@ class currencyTests_for_report_out(TestCase):
         self.assertEqual(report_out.Salary.currency_to_rub(10, 30.0, 'EUR'), 1198.0)
 
 
-class as_textTests(TestCase):
+class as_textTests_for_report_out(TestCase):
     def test_None(self):
         self.assertEqual(report_out.Report.as_text(None), '')
 
@@ -69,14 +69,14 @@ class as_textTests(TestCase):
 
 
 class SalaryTests_for_table_out(TestCase):
-    def test_salary_from(self):
+    def test_salary_type(self):
         self.assertEqual(type(table_out.Salary(10.0, 20.4, 'Нет', 'RUR')).__name__, 'Salary')
 
-    def test_salary_to(self):
+    def test_salary_from(self):
         self.assertEqual(table_out.Salary(10.0, 20.4, 'Да', 'RUR').salary_from, 10)
 
-    def test_salary_currency(self):
+    def test_salary_to(self):
         self.assertEqual(table_out.Salary(10.0, 20.4, 'Нет', 'RUR').salary_to, 20)
 
-    def test_salary_to_rub(self):
+    def test_salary_currency(self):
         self.assertEqual(table_out.Salary('10.0', 20.4, 'Нет', 'RUR').salary_currency, 'RUR')
