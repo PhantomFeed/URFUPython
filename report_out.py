@@ -8,7 +8,6 @@ from openpyxl.styles import Font, Border, Side
 from openpyxl.styles.numbers import FORMAT_PERCENTAGE_00
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
-import doctest
 
 
 class Tools:
@@ -184,6 +183,26 @@ class DataSet:
             print("Пустой файл")
             exit()
 
+    # @staticmethod
+    # def strptime_method(dic_vacancies):
+    #     years = []
+    #     for vacancy in dic_vacancies:
+    #         years.append(int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')))
+    #     return years
+
+    @staticmethod
+    def get_year(date):
+        return int(date[:4])
+
+
+    # @staticmethod
+    # def str_cut_with_split_method(dic_vacancies):
+    #     years = []
+    #     for vacancy in dic_vacancies:
+    #         years.append(int(vacancy.published_at.split('-')[0]))
+    #     return years
+
+
     @staticmethod
     def prepare_data(file_name):
         """Отбирает вакансии без пустых ячеек и составляет лист вакансий
@@ -248,8 +267,8 @@ class InputParam:
         """
         years = []
         for vacancy in dictionary:
-            years.append(int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')))
-        years.sort()
+            years.append(InputParam.get_params(vacancy.published_at))
+        Year = years
         years = list(range(min(years), max(years) + 1))
 
         salary_filter = {year: [] for year in years}
@@ -257,8 +276,8 @@ class InputParam:
         vac_sal_filter = {year: [] for year in years}
         vac_count_filter = {year: 0 for year in years}
 
-        for vacancy in dictionary:
-            year = int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y'))
+        for i, vacancy in enumerate(dictionary):
+            year = Year[i]
             salary_filter[year].append(vacancy.salary.salary_to_rub)
             vac_filter[year] += 1
             if key in vacancy.name:
