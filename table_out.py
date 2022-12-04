@@ -225,6 +225,10 @@ class InputParam:
         InputParam.print_vacancies(data_set, params[1], params[2], params[3], params[4], params[5])
 
     @staticmethod
+    def get_date(date):
+        return int(date[8:10]+'.'+date[5:7]+'.'+date[0:4])
+
+    @staticmethod
     def get_params():
         """Запускает проверку правильности введенных параметров
 
@@ -347,8 +351,7 @@ class InputParam:
                         k = k + 1
                 return k == len(parameters)
             if parameter[0] == 'Дата публикации вакансии':
-                return datetime.strptime(row['published_at'], '%Y-%m-%dT%H:%M:%f%z').strftime('%d.%m.%Y') == parameter[
-                    1]
+                return InputParam.get_date(row['published_at']) == parameter[1]
             return row[Tools.rus_names[parameter[0]]] == parameter[1]
 
         filtered_list = list(filter(for_filter, data))
@@ -385,7 +388,7 @@ class InputParam:
                 skills = row['key_skills'].split('\n')
                 return len(skills)
             if sort == 'Дата публикации вакансии':
-                return datetime.strptime(row['published_at'], '%Y-%m-%dT%H:%M:%f%z')
+                return InputParam.get_date(row['published_at'])
             if sort == 'Опыт работы':
                 return exp_sort[row['experience_id']]
             return row[Tools.rus_names[sort]]
@@ -423,8 +426,7 @@ class InputParam:
             salary[0] = str(salary_from)
             salary[2] = str(salary_to)
             sorted_list[i]['salary_from'] = ' '.join(salary)
-            sorted_list[i]['published_at'] = datetime.strptime(sorted_list[i]['published_at'],
-                                                               '%Y-%m-%dT%H:%M:%f%z').strftime('%d.%m.%Y')
+            sorted_list[i]['published_at'] = InputParam.get_date(sorted_list[i])
 
             new_list = list(sorted_list[i].values())
             for j in range(len(new_list)):
