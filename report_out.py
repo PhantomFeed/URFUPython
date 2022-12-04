@@ -8,7 +8,7 @@ from openpyxl.styles import Font, Border, Side
 from openpyxl.styles.numbers import FORMAT_PERCENTAGE_00
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
-import pandas as pd
+import doctest
 
 
 class Tools:
@@ -31,10 +31,23 @@ class Tools:
     @staticmethod
     def prepare(text):
         """Очищает входную строку и возвращает очищенную для дальнейшего использования
+
             Args:
                 text (str): Строка, которую нужно очистить
+
             Returns:
                 str: Очищенная строка
+
+            >>> Tools.prepare('<div>Файл</div>')
+            'Файл'
+            >>> Tools.prepare('qwerty')
+            'qwerty'
+            >>> Tools.prepare('AA          AAA')
+            'AA AAA'
+            >>> Tools.prepare('you\\nme')
+            'you; me'
+            >>> Tools.prepare('')
+            ''
         """
         text = re.sub(r"<[^>]+>", '', text)
         text = "; ".join(text.split('\n'))
@@ -86,11 +99,21 @@ class Salary:
 
     def __init__(self, salary_from, salary_to, salary_currency):
         """Инициализирует объект Salary
+
             Args:
                 salary_from (str or int or float): Нижняя граница вилки оклада
                 salary_to (str or int or float): Верхняя граница вилки оклада
                 salary_currency (str): Валюта оклада
                 salary_to_rub (int): Средняя зарплата в рублях
+
+            >>> type(Salary(10.0, 20.4, 'RUR')).__name__
+            'Salary'
+            >>> Salary(10.0, 20.4, 'RUR').salary_from
+            10
+            >>> Salary(10.0, 20.4, 'RUR').salary_to
+            20
+            >>> Salary('10.0', 20.4, 'RUR').salary_currency
+            'RUR'
         """
         self.salary_from = salary_from
         self.salary_to = salary_to
@@ -100,25 +123,38 @@ class Salary:
     @staticmethod
     def currency_to_rub(salary_from, salary_to, salary_currency):
         """Вычисляет среднюю зарплату из вилки и переводит в рубли, при помощи словаря - currency
+
             Args:
-                salary_from (str): Нижняя вилка оклада
-                salary_to (str): Верхняя вилка оклада
+                salary_from (str or int or float): Нижняя вилка оклада
+                salary_to (str or int or float): Верхняя вилка оклада
                 salary_currency (str): Валюта оклада
+
             Returns:
                 float: Средняя зарплата в рублях
+
+        >>> Salary(10, 20, 'RUR').currency_to_rub()
+        15.0
+        >>> Salary(10.0, 20, 'RUR').currency_to_rub()
+        15.0
+        >>> Salary(10, 30.0, 'RUR').currency_to_rub()
+        20.0
+        >>> Salary(10, 30.0, 'EUR').currency_to_rub()
+        1198.0
         """
         return (float(salary_from) + float(salary_to)) / 2 * Salary.currency[salary_currency]
 
 
 class DataSet:
     """Класс отвечает за чтение и подготовку данных из CSV-файла
+
         Attributes:
             file_name (str): Название файла
             vacancies_objects (list): Список вакансий
     """
 
     def __init__(self, file_name):
-        """Инициализирует объект DataSet.
+        """Инициализирует объект DataSet
+
             Args:
                 file_name (str): Название файла
                 vacancies_objects (list): Список вакансий
@@ -311,11 +347,24 @@ class Report:
 
     @staticmethod
     def as_text(value):
-        """Парсит value в строку.
+        """Парсит value в строку
+
             Args:
                 value (any): Входное значение, которое нужно конвертировать
+
             Returns:
-                str: value конвертированное в строку.
+                str: value конвертированное в строку
+
+            >>> Report.as_text(None)
+            ''
+            >>> Report.as_text('')
+            ''
+            >>> type(Report.as_text(['Да', 'Нет'])).__name__
+            'str'
+            >>> type(Report.as_text({'Да': 'Нет'})).__name__
+            'str'
+            >>> Report.as_text('string')
+            'string'
         """
         if value is None:
             return ''
@@ -392,6 +441,7 @@ class Report:
     @staticmethod
     def generate_graph(report):
         """Генерирует png файл со статистикой вакансий на графиках
+
             Args:
                 report (Report): Объект класса Report
         """
