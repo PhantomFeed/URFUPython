@@ -99,10 +99,19 @@ class Salary:
         """Инициализирует объект Salary
 
             Args:
-                salary_from (int): Нижняя граница вилки оклада
-                salary_to (int): Верхняя граница вилки оклада
+                salary_from (int of int of float): Нижняя граница вилки оклада
+                salary_to (int of int of float): Верхняя граница вилки оклада
                 salary_gross (str): Информация о том с вычитом ли налогов зп или нет
                 salary_currency (str): Валюта оклада
+
+            >>> type(Salary(10.0, 20.4, 'Нет' ,'RUR')).__name__
+            'Salary'
+            >>> Salary(10.0, 20.4, 'Да' ,'RUR').salary_from
+            10
+            >>> Salary(10.0, 20.4, 'Нет' ,'RUR').salary_to
+            20
+            >>> Salary('10.0', 20.4, 'Нет' ,'RUR').salary_currency
+            'RUR'
         """
         self.salary_from = salary_from
         self.salary_to = salary_to
@@ -197,10 +206,10 @@ class InputParam:
 
         Attributes:
             file_name (str): Название файла
-            filter_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+            filter_param (list): Параметр фильтрации (список из столбца и параметра фильрации)
             sort_param (str): Параметр сортировки
             invert_param (str): Обратный ли порядок сортировки
-            range_param (list): Диапазон вывода(список из двух чисел)
+            range_param (list): Диапазон вывода (список из двух чисел)
             columns_param (str): Требуемые столбцы
     """
 
@@ -209,7 +218,7 @@ class InputParam:
 
             Args:
                 data_set (list): Список словарей с вакансиями
-                param (list): Список параметров
+                params (list): Список параметров
         """
         params = InputParam.get_params()
         data_set = DataSet(params[0])
@@ -314,7 +323,7 @@ class InputParam:
             """Фильтрует данные
 
                 Args:
-                    row (list): Входные данные
+                    row (): Входные данные
 
                 Returns:
                     row (list): Отфильтрованные данные по парметрам
